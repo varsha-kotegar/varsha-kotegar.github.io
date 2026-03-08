@@ -231,7 +231,7 @@ const ContactSection = () => {
               </p>
               <a
                 href="mailto:varshakotegar26@gmail.com"
-                className="inline-block font-display italic text-xl md:text-2xl text-foreground hover:text-accent transition-colors duration-300 mb-12"
+                className="inline-block font-display italic text-xl md:text-2xl text-accent hover:text-foreground transition-colors duration-300 mb-12"
                 data-cursor="Email"
               >
                 varshakotegar26@gmail.com
