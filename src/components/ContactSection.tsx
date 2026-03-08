@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { MaskRevealLines } from "@/components/MaskReveal";
+import { useMagnetic } from "@/hooks/use-magnetic";
 
 const links = [
   { label: "LinkedIn", href: "https://linkedin.com" },
@@ -8,22 +10,38 @@ const links = [
   { label: "Resume", href: "#" },
 ];
 
+const MagneticLink = ({ link }: { link: typeof links[0] }) => {
+  const magnetic = useMagnetic({ strength: 0.25, stiffness: 200, damping: 20 });
+
+  return (
+    <motion.a
+      ref={magnetic.ref as any}
+      style={magnetic.style}
+      onMouseMove={magnetic.onMouseMove as any}
+      onMouseLeave={magnetic.onMouseLeave as any}
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-1 font-body text-sm tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors duration-300"
+      data-cursor="Open"
+    >
+      {link.label}
+      <ArrowUpRight size={14} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+    </motion.a>
+  );
+};
+
 const ContactSection = () => {
   return (
     <section id="contact" className="section-padding bg-card">
       <div className="max-w-7xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
-        >
-          <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">Let's Connect</p>
-          <h2 className="editorial-heading text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
-            Get in touch
-          </h2>
-        </motion.div>
+        <div className="mb-12">
+          <MaskRevealLines
+            lines={["Let's Connect", "Get in touch"]}
+            lineClassName="first:font-body first:text-sm first:tracking-[0.3em] first:uppercase first:text-accent first:mb-4 last:editorial-heading last:text-5xl md:last:text-6xl lg:last:text-7xl last:font-bold last:text-foreground"
+            className="flex flex-col items-center"
+          />
+        </div>
 
         <motion.a
           initial={{ opacity: 0, y: 20 }}
@@ -32,6 +50,7 @@ const ContactSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           href="mailto:varsha@gmail.com"
           className="inline-block font-display italic text-2xl md:text-4xl text-accent hover:text-foreground transition-colors duration-300 mb-16"
+          data-cursor="Email"
         >
           varsha@gmail.com
         </motion.a>
@@ -44,16 +63,7 @@ const ContactSection = () => {
           className="flex justify-center gap-8 flex-wrap"
         >
           {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-1 font-body text-sm tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors duration-300"
-            >
-              {link.label}
-              <ArrowUpRight size={14} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
-            </a>
+            <MagneticLink key={link.label} link={link} />
           ))}
         </motion.div>
       </div>
