@@ -147,7 +147,7 @@ const ProjectsSection = () => {
             lineClassName="first:font-body first:text-sm first:tracking-[0.3em] first:uppercase first:text-accent first:mb-4 last:editorial-heading last:text-5xl md:last:text-6xl lg:last:text-7xl last:font-bold last:text-foreground"
           />
           <div className="flex items-end justify-between mt-6">
-            <div /> {/* spacer */}
+            <Collectible id="idea" icon="💡" label="Idea" />
             <p className="hidden md:block font-body text-sm text-muted-foreground tracking-wider">
               {String(totalCards).padStart(2, "0")} Projects
             </p>

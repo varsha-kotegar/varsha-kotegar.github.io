@@ -55,6 +55,10 @@ const ContactSection = () => {
           varshakotegar26@gmail.com
         </motion.a>
 
+        <div className="flex justify-center mb-8">
+          <Collectible id="future" icon="🚀" label="Future" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
