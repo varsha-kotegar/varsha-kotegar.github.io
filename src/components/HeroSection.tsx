@@ -1,66 +1,94 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import profileImg from "@/assets/profile.jpg";
 
 const HeroSection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Name: starts at scale 1, shrinks to 0.45 and moves up
+  const nameScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.45]);
+  const nameY = useTransform(scrollYProgress, [0, 0.5], [0, -120]);
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.9]);
+
+  // Tagline fades in as we scroll
+  const taglineOpacity = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
+  const taglineY = useTransform(scrollYProgress, [0.15, 0.4], [60, 0]);
+
+  // Intro paragraph fades in later
+  const introOpacity = useTransform(scrollYProgress, [0.3, 0.55], [0, 1]);
+  const introY = useTransform(scrollYProgress, [0.3, 0.55], [50, 0]);
+
+  // Photo fades in
+  const photoOpacity = useTransform(scrollYProgress, [0.25, 0.5], [0, 1]);
+  const photoScale = useTransform(scrollYProgress, [0.25, 0.5], [0.9, 1]);
+
+  // Scroll indicator fades out
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
   return (
-    <section id="home" className="min-h-screen flex items-center section-padding pt-32">
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Text */}
-          <div className="lg:col-span-7 space-y-8">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground"
-            >
-              Developer · Writer · Explorer
-            </motion.p>
+    <section ref={sectionRef} id="home" className="relative" style={{ height: "280vh" }}>
+      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+        {/* Large name */}
+        <motion.div
+          style={{ scale: nameScale, y: nameY, opacity: nameOpacity }}
+          className="text-center"
+        >
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="font-body text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6"
+          >
+            Developer · Writer · Explorer
+          </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="editorial-heading text-7xl sm:text-8xl md:text-9xl font-bold text-foreground"
-            >
-              Varsha Kotegar
-            </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+            className="editorial-heading text-[12vw] md:text-[10vw] lg:text-[9vw] font-bold text-foreground leading-[0.9]"
+          >
+            Varsha
+            <br />
+            <span className="text-accent">Kotegar</span>
+          </motion.h1>
+        </motion.div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="font-display italic text-xl md:text-2xl text-accent max-w-xl"
-            >
-              "An odyssey in engineering; a narrative in progress."
-            </motion.p>
+        {/* Tagline - fades in on scroll */}
+        <motion.p
+          style={{ opacity: taglineOpacity, y: taglineY }}
+          className="font-display italic text-lg md:text-2xl text-accent text-center max-w-xl mt-8"
+        >
+          "An odyssey in engineering; a narrative in progress."
+        </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-              className="editorial-body text-muted-foreground text-base md:text-lg max-w-lg leading-relaxed"
-            >
-              As a third-year engineering student, I am currently mastering the technical building blocks of my field while refining my voice as a writer and speaker. I am in a dedicated 'learning and building' phase, driven by a passion for exploring new technologies and translating them into stories that make people smarter.
-            </motion.p>
-          </div>
+        {/* Intro + Photo row */}
+        <div className="flex flex-col lg:flex-row items-center gap-12 mt-12 max-w-6xl w-full">
+          <motion.p
+            style={{ opacity: introOpacity, y: introY }}
+            className="editorial-body text-muted-foreground text-base md:text-lg max-w-lg leading-relaxed text-center lg:text-left flex-1"
+          >
+            As a third-year engineering student, I am currently mastering the technical building blocks of my field while refining my voice as a writer and speaker. I am in a dedicated 'learning and building' phase, driven by a passion for exploring new technologies and translating them into stories that make people smarter.
+          </motion.p>
 
-          {/* Photo */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="lg:col-span-5 flex justify-center lg:justify-end"
+            style={{ opacity: photoOpacity, scale: photoScale }}
+            className="flex-shrink-0"
           >
             <div className="relative">
-              <div className="w-72 h-96 md:w-80 md:h-[28rem] overflow-hidden rounded-sm">
+              <div className="w-48 h-64 md:w-56 md:h-72 overflow-hidden rounded-sm">
                 <img
                   src={profileImg}
-                  alt="Varsha - Developer Portrait"
+                  alt="Varsha Kotegar - Developer Portrait"
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 />
               </div>
-              <div className="absolute -bottom-4 -right-4 w-72 h-96 md:w-80 md:h-[28rem] border border-accent rounded-sm -z-10" />
+              <div className="absolute -bottom-3 -right-3 w-48 h-64 md:w-56 md:h-72 border border-accent rounded-sm -z-10" />
             </div>
           </motion.div>
         </div>
@@ -69,17 +97,20 @@ const HeroSection = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="mt-20 flex items-center gap-3"
+          transition={{ delay: 1.5 }}
+          style={{ opacity: scrollIndicatorOpacity }}
+          className="absolute bottom-10 flex items-center gap-3"
         >
-          <div className="w-8 h-12 border border-muted-foreground/30 rounded-full flex justify-center pt-2">
+          <div className="w-7 h-11 border border-muted-foreground/30 rounded-full flex justify-center pt-2">
             <motion.div
-              animate={{ y: [0, 12, 0] }}
+              animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="w-1 h-2 bg-muted-foreground rounded-full"
+              className="w-1 h-1.5 bg-muted-foreground rounded-full"
             />
           </div>
-          <span className="text-xs font-body text-muted-foreground tracking-widest uppercase">Scroll to explore</span>
+          <span className="text-[10px] font-body text-muted-foreground tracking-widest uppercase">
+            Scroll to explore
+          </span>
         </motion.div>
       </div>
     </section>
