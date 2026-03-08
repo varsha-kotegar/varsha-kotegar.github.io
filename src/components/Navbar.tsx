@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home, Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { usePageTransition } from "@/components/PageTransition";
 
-const navItems = ["Home", "Projects", "About", "Achievements", "Contact"];
+const navItems = ["Home", "Projects", "About", "Achievements", "Contact", "Blog"];
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
@@ -18,10 +19,28 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleClick = (item: string) => {
     if (item === active) return;
     setActive(item);
     setMobileOpen(false);
+
+    if (item === "Blog") {
+      navigate("/blog");
+      return;
+    }
+
+    // If we're not on the homepage, go there first
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const id = item.toLowerCase();
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+      return;
+    }
 
     triggerTransition(() => {
       const id = item.toLowerCase();
