@@ -99,7 +99,7 @@ const HeroSection = () => {
                   transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
                   className="relative w-fit"
                 >
-                  <div className="w-40 h-52 md:w-52 md:h-64 overflow-hidden rounded-sm">
+                  <div className="w-56 h-72 md:w-72 md:h-[22rem] overflow-hidden rounded-sm">
                     <img
                       src={profileImg}
                       alt="Varsha Kotegar"
