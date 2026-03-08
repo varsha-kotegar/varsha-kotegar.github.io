@@ -114,37 +114,55 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Mobile toggle */}
-        <div className="md:hidden">
+        {/* Right side: theme toggle + mobile menu */}
+        <div className="flex items-center gap-2">
+          {/* Theme toggle */}
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="rounded-full p-3 bg-muted border border-border text-foreground"
+            onClick={() => {
+              const next = !dark;
+              setDark(next);
+              document.documentElement.classList.toggle("dark", next);
+              localStorage.setItem("theme", next ? "dark" : "light");
+            }}
+            className="rounded-full p-2.5 text-muted-foreground hover:text-foreground transition-colors duration-200"
+            data-cursor="Toggle"
+            aria-label="Toggle theme"
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute top-16 right-0 rounded-2xl px-4 py-3 min-w-[200px] bg-card/95 backdrop-blur-md border border-border shadow-lg"
+          {/* Mobile toggle */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="rounded-full p-3 bg-muted border border-border text-foreground"
             >
-              <ul className="flex flex-col gap-1">
-                {navItems.filter(i => i !== "Home").map((item) => (
-                  <li key={item}>
-                    <button
-                      onClick={() => handleClick(item)}
-                      className={`w-full text-left px-4 py-2.5 text-sm font-body font-medium tracking-widest uppercase rounded-full text-foreground transition-colors duration-200 ${
-                        active === item ? "bg-muted" : ""
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {mobileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute top-16 right-0 rounded-2xl px-4 py-3 min-w-[200px] bg-card/95 backdrop-blur-md border border-border shadow-lg"
+              >
+                <ul className="flex flex-col gap-1">
+                  {navItems.filter(i => i !== "Home").map((item) => (
+                    <li key={item}>
+                      <button
+                        onClick={() => handleClick(item)}
+                        className={`w-full text-left px-4 py-2.5 text-sm font-body font-medium tracking-widest uppercase rounded-full text-foreground transition-colors duration-200 ${
+                          active === item ? "bg-muted" : ""
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </motion.nav>
