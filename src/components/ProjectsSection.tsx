@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { useMagnetic } from "@/hooks/use-magnetic";
 import { MaskRevealLines } from "@/components/MaskReveal";
+import Collectible from "@/components/Collectible";
 
 const projects = [
   {
