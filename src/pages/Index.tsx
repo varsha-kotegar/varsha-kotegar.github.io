@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import CustomCursor from "@/components/CustomCursor";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -14,29 +14,45 @@ import { PageTransitionProvider } from "@/components/PageTransition";
 
 const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [looping, setLooping] = useState(false);
+  const loopLock = useRef(false);
+
+  const triggerLoop = useCallback(() => {
+    if (loopLock.current) return;
+    loopLock.current = true;
+
+    // 1. Fade overlay in
+    setLooping(true);
+
+    // 2. After overlay is opaque, instantly jump to top
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+
+      // 3. Fade overlay out
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          setLooping(false);
+          loopLock.current = false;
+        }, 100);
+      });
+    }, 500);
+  }, []);
 
   useEffect(() => {
-    let loopTriggered = false;
-
     const handleScroll = () => {
-      if (loopTriggered) return;
+      if (loopLock.current) return;
       const el = document.documentElement;
       const scrollTop = el.scrollTop;
       const scrollHeight = el.scrollHeight - el.clientHeight;
 
-      if (scrollTop >= scrollHeight - 50) {
-        loopTriggered = true;
-        // Don't reverse — just instantly reset to top so next scroll continues forward
-        window.scrollTo({ top: 1 }); // 1px to avoid re-triggering
-        requestAnimationFrame(() => {
-          loopTriggered = false;
-        });
+      if (scrollTop >= scrollHeight - 30) {
+        triggerLoop();
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [triggerLoop]);
 
   return (
     <PageTransitionProvider>
@@ -71,6 +87,15 @@ const Index = () => {
 
         <Footer />
         <HeroPreview />
+
+        {/* Circular scroll fade overlay */}
+        <div
+          className="fixed inset-0 z-[9999] pointer-events-none bg-background"
+          style={{
+            opacity: looping ? 1 : 0,
+            transition: "opacity 0.45s ease-in-out",
+          }}
+        />
       </div>
     </PageTransitionProvider>
   );
