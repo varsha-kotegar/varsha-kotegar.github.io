@@ -59,6 +59,7 @@ const Index = () => {
     <PageTransitionProvider>
       <div ref={containerRef} className="min-h-screen bg-background">
         <CustomCursor />
+        <XPProgressBar />
         <Navbar />
         <HeroSection />
 
