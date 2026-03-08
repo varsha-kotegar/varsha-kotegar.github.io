@@ -23,12 +23,21 @@ const Navbar = () => {
   const location = useLocation();
 
   const handleClick = (item: string) => {
-    if (item === active) return;
+    if (item === active && item !== "Home") return;
     setActive(item);
     setMobileOpen(false);
 
     if (item === "Blog") {
       navigate("/blog");
+      return;
+    }
+
+    if (item === "Home") {
+      if (location.pathname !== "/") {
+        navigate("/");
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
       return;
     }
 
