@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { useMagnetic } from "@/hooks/use-magnetic";
+import { MaskRevealLines } from "@/components/MaskReveal";
 
 const projects = [
   {
@@ -58,8 +59,8 @@ const projects = [
   },
 ];
 
-const MagneticCard = ({ project, index }: { project: typeof projects[0]; index: number }) => {
-  const magnetic = useMagnetic({ strength: 0.15, stiffness: 200, damping: 25 });
+const MagneticCard = ({ project }: { project: typeof projects[0] }) => {
+  const magnetic = useMagnetic({ strength: 0.12, stiffness: 200, damping: 25 });
 
   return (
     <motion.div
@@ -70,18 +71,30 @@ const MagneticCard = ({ project, index }: { project: typeof projects[0]; index: 
       className="flex-shrink-0 w-[80vw] md:w-[45vw] lg:w-[35vw] group"
       data-cursor="View Project"
     >
-      {/* Image */}
-      <div
-        className="w-full aspect-[4/3] rounded-lg mb-6 overflow-hidden flex items-center justify-center relative"
-        style={{ backgroundColor: project.color }}
-      >
+      {/* Image with hover zoom */}
+      <div className="w-full aspect-[4/3] rounded-lg mb-6 overflow-hidden relative">
+        <motion.div
+          className="w-full h-full flex items-center justify-center"
+          style={{ backgroundColor: project.color }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <span className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white/25 select-none">
+            {project.title}
+          </span>
+        </motion.div>
+
         {/* Category label */}
-        <span className="absolute top-4 left-4 text-[10px] font-body tracking-[0.2em] uppercase text-white/70 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full">
+        <span className="absolute top-4 left-4 text-[10px] font-body tracking-[0.2em] uppercase text-white/80 bg-black/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
           {project.category}
         </span>
-        <span className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white/30 select-none">
-          {project.title}
-        </span>
+
+        {/* Hover overlay with "View Case Study" */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500 flex items-end justify-start p-6">
+          <span className="font-body text-xs tracking-[0.2em] uppercase text-white opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+            View Case Study →
+          </span>
+        </div>
       </div>
 
       {/* Content */}
@@ -116,7 +129,6 @@ const ProjectsSection = () => {
     offset: ["start start", "end start"],
   });
 
-  // Map vertical scroll to horizontal movement
   const totalCards = projects.length;
   const x = useTransform(
     scrollYProgress,
@@ -127,26 +139,18 @@ const ProjectsSection = () => {
   return (
     <section ref={sectionRef} id="projects" className="relative" style={{ height: `${totalCards * 60}vh` }}>
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-        {/* Header */}
+        {/* Header with mask reveal */}
         <div className="px-6 md:px-16 lg:px-24 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
-              Selected Work
+          <MaskRevealLines
+            lines={["Selected Work", "Projects"]}
+            lineClassName="first:font-body first:text-sm first:tracking-[0.3em] first:uppercase first:text-accent first:mb-4 last:editorial-heading last:text-5xl md:last:text-6xl lg:last:text-7xl last:font-bold last:text-foreground"
+          />
+          <div className="flex items-end justify-between mt-6">
+            <div /> {/* spacer */}
+            <p className="hidden md:block font-body text-sm text-muted-foreground tracking-wider">
+              {String(totalCards).padStart(2, "0")} Projects
             </p>
-            <div className="flex items-end justify-between">
-              <h2 className="editorial-heading text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
-                Projects
-              </h2>
-              <p className="hidden md:block font-body text-sm text-muted-foreground tracking-wider">
-                {String(totalCards).padStart(2, "0")} Projects
-              </p>
-            </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Horizontal scroll track */}
@@ -155,7 +159,7 @@ const ProjectsSection = () => {
           className="flex gap-8 md:gap-12 pl-6 md:pl-16 lg:pl-24 pr-[20vw]"
         >
           {projects.map((project, i) => (
-            <MagneticCard key={project.title} project={project} index={i} />
+            <MagneticCard key={project.title} project={project} />
           ))}
         </motion.div>
       </div>
