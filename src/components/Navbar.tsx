@@ -67,12 +67,11 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-24"
     >
       <div
-        className="max-w-7xl mx-auto flex items-center justify-between py-4 border-b transition-colors duration-300"
-        style={{
-          borderColor: scrolled ? "rgba(0,0,0,0.08)" : "transparent",
-          backgroundColor: scrolled ? "hsla(50, 7%, 95%, 0.85)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-        }}
+        className={`max-w-7xl mx-auto flex items-center justify-between py-4 border-b transition-all duration-300 ${
+          scrolled
+            ? "border-border/40 bg-background/85 backdrop-blur-xl"
+            : "border-transparent bg-transparent backdrop-blur-none"
+        }`}
       >
         {/* Brand */}
         <a
