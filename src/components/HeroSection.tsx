@@ -107,7 +107,7 @@ const HeroSection = () => {
                     />
                   </div>
                   <div
-                    className="absolute -bottom-2 -right-2 w-40 h-52 md:w-52 md:h-64 rounded-sm -z-10 border border-accent/30"
+                    className="absolute -bottom-2 -right-2 w-56 h-72 md:w-72 md:h-[22rem] rounded-sm -z-10 border border-accent/30"
                   />
                 </motion.div>
               </div>
