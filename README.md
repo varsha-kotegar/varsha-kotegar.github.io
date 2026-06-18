@@ -34,11 +34,11 @@ This project is a high-performance, responsive portfolio that showcases projects
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/varsha-kotegar/varsha-s-editorial-studio.git
+   git clone https://github.com/varsha-kotegar/varsha-kotegar.github.io.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd varsha-s-editorial-studio
+   cd varsha-kotegar.github.io
    ```
 3. Install dependencies:
    ```bash
